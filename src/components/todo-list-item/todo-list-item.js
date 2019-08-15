@@ -29,8 +29,8 @@ export default class TodoListItem extends Component {
         }
 
         return (
-            <span className={classes} onClick={this.onItemClick}>
-            <span className="todo-list-item-label"
+            <span className={classes}>
+            <span className="todo-list-item-label" onClick={this.onItemClick}
                   style={style}>
                 {value}
             </span>
