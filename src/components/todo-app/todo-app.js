@@ -13,14 +13,16 @@ export default class App extends Component {
         {
             value: "Drink Coffee",
             important: false,
-            key: 1
+            key: 1,
+            done: false
         }, {
             value: "Build Awesome App",
             important: true,
-            key: 2
+            key: 2,
+            done: false
         }]};
 
-    makeImportant = (id) => {
+    onImportant = (id) => {
         this.setState(({todos}) => {
             const idx = todos.findIndex((el) => el.key === id);
             const item = {...todos[idx], important: !todos[idx].important};
@@ -49,16 +51,33 @@ export default class App extends Component {
         });
     };
 
+    onDone = (id) => {
+        this.setState(({todos}) => {
+            const idx = todos.findIndex((el) => el.key === id);
+            const item = {...todos[idx], done: !todos[idx].done};
+
+            const before = todos.slice(0, idx);
+            const after = todos.slice(idx+1);
+            const newTodos = [...before, ...[item], ...after];
+
+            return {
+                todos: newTodos
+            }
+        });
+    };
+
 
 
     render() {
+        const totalCount = this.state.todos.length;
+        const doneCount = this.state.todos.filter((el) => el.done).length;
         return (<div className="todo-app">
-            <AppHeader toDo="1" done="3"/>
+            <AppHeader toDo={totalCount - doneCount} done={doneCount}/>
             <div className="top-panel d-flex">
                 <SearchPanel/>
                 <ItemStatusFilter/>
             </div>
-            <TodoList todos={this.state.todos} makeImportant={this.makeImportant} onDelete={this.onDelete}/>
+            <TodoList todos={this.state.todos} onImportant={this.onImportant} onDelete={this.onDelete} onDone={this.onDone}/>
         </div>);
     }
 };
