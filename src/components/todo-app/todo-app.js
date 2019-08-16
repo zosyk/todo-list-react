@@ -35,6 +35,22 @@ export default class App extends Component {
         });
     };
 
+    onDelete = (id) => {
+        this.setState(({todos}) => {
+            const idx = todos.findIndex((el) => el.key === id);
+
+            const before = todos.slice(0, idx);
+            const after = todos.slice(idx+1);
+            const newTodos = [...before, ...after];
+
+            return {
+                todos: newTodos
+            }
+        });
+    };
+
+
+
     render() {
         return (<div className="todo-app">
             <AppHeader toDo="1" done="3"/>
@@ -42,7 +58,7 @@ export default class App extends Component {
                 <SearchPanel/>
                 <ItemStatusFilter/>
             </div>
-            <TodoList todos={this.state.todos} makeImportant={this.makeImportant}/>
+            <TodoList todos={this.state.todos} makeImportant={this.makeImportant} onDelete={this.onDelete}/>
         </div>);
     }
 };
