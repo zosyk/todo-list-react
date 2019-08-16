@@ -9,15 +9,16 @@ export default class TodoListItem extends Component {
     };
 
     onItemClick = () => {
-        this.setState((prevState) => (
-        {
-            done: !prevState.done
-        }));
+        this.setState((prevState) => {
+            return {
+                done: !prevState.done
+            };
+        });
     };
 
 
     render() {
-        const {value, important = false} = this.props;
+        const {value, important = false, makeImportant} = this.props;
         const style = {
             color: important ? 'steelblue' : 'black',
             fontWeight: important ? 'bold' : 'normal'
@@ -35,7 +36,7 @@ export default class TodoListItem extends Component {
                 {value}
             </span>
 
-            <button type="button" className="btn btn-outline-success btn-sm float-right">
+            <button type="button" className="btn btn-outline-success btn-sm float-right" onClick={makeImportant}>
                 <i className="fa fa-exclamation"/>
             </button>
              <button type="button" className="btn btn-outline-danger btn-sm float-right">
