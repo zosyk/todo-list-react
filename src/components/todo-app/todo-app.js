@@ -38,21 +38,6 @@ export default class App extends Component {
       });
     };
 
-    onImportant = (id) => {
-        this.setState(({todos}) => {
-            const idx = todos.findIndex((el) => el.id === id);
-            const item = {...todos[idx], important: !todos[idx].important};
-
-            const before = todos.slice(0, idx);
-            const after = todos.slice(idx+1);
-            const newTodos = [...before, ...[item], ...after];
-
-            return {
-                todos: newTodos
-            }
-        });
-    };
-
     onDelete = (id) => {
         this.setState(({todos}) => {
             const idx = todos.findIndex((el) => el.id === id);
@@ -67,22 +52,29 @@ export default class App extends Component {
         });
     };
 
-    onDone = (id) => {
+    onImportant = (id) => {
         this.setState(({todos}) => {
-            const idx = todos.findIndex((el) => el.id === id);
-            const item = {...todos[idx], done: !todos[idx].done};
-
-            const before = todos.slice(0, idx);
-            const after = todos.slice(idx+1);
-            const newTodos = [...before, ...[item], ...after];
-
             return {
-                todos: newTodos
+                todos: this.toggleProperty(todos, id, 'important')
             }
         });
     };
 
+    onDone = (id) => {
+        this.setState(({todos}) => {
+            return {
+                todos: this.toggleProperty(todos, id, 'done')
+            }
+        });
+    };
 
+    toggleProperty(arr, id, propName) {
+        const idx = arr.findIndex((el) => el.id === id);
+        let oldItem = arr[idx];
+        const newItem = {...oldItem, [propName]: !oldItem[propName]};
+
+        return [...arr.slice(0, idx), newItem, ...arr.slice(idx+1)];
+    }
 
     render() {
         const totalCount = this.state.todos.length;
