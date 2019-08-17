@@ -16,6 +16,9 @@ export default class AddTodoItem extends Component {
     onFormSubmit = (e) => {
         e.preventDefault();
         this.props.onAddItem(this.state.label);
+        this.setState({
+            label: ''
+        })
     };
 
 
@@ -24,7 +27,8 @@ export default class AddTodoItem extends Component {
             <form className="add-todo-item-form d-flex" onSubmit={this.onFormSubmit}>
                 <input type="text" className="form-control"
                        placeholder="What needs to be done"
-                       onChange={this.onLabelChange} required/>
+                       onChange={this.onLabelChange} required
+                       value={this.state.label}/>
                 <button type="submit" className="button btn btn-outline-secondary">Add Item</button>
             </form>
         );
