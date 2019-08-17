@@ -11,11 +11,14 @@ export default class App extends Component {
 
     maxId = 100;
 
-    state ={todos : [
-        this.createTodoItem("Hello there"),
-        this.createTodoItem("Drink Coffee"),
-        this.createTodoItem("Build Awesome App", true),
-       ]};
+    state = {
+        searchString: '',
+        todos: [
+            this.createTodoItem("Hello there"),
+            this.createTodoItem("Drink Coffee"),
+            this.createTodoItem("Build Awesome App", true),
+        ]
+    };
 
     createTodoItem(label, important = false) {
         return {
@@ -27,15 +30,15 @@ export default class App extends Component {
     }
 
     onAddItem = (label) => {
-      const  newItem = this.createTodoItem(label);
+        const newItem = this.createTodoItem(label);
 
-      this.setState(({todos}) => {
-        const newTodos = [...todos, newItem];
+        this.setState(({todos}) => {
+            const newTodos = [...todos, newItem];
 
-        return {
-            todos: newTodos
-        }
-      });
+            return {
+                todos: newTodos
+            }
+        });
     };
 
     onDelete = (id) => {
@@ -43,7 +46,7 @@ export default class App extends Component {
             const idx = todos.findIndex((el) => el.id === id);
 
             const before = todos.slice(0, idx);
-            const after = todos.slice(idx+1);
+            const after = todos.slice(idx + 1);
             const newTodos = [...before, ...after];
 
             return {
@@ -68,24 +71,35 @@ export default class App extends Component {
         });
     };
 
+    onChangeSearchPanel = (searchString) => {
+        this.setState({
+            searchString: searchString
+        });
+    };
+
     toggleProperty(arr, id, propName) {
         const idx = arr.findIndex((el) => el.id === id);
         let oldItem = arr[idx];
         const newItem = {...oldItem, [propName]: !oldItem[propName]};
 
-        return [...arr.slice(0, idx), newItem, ...arr.slice(idx+1)];
+        return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)];
     }
 
     render() {
-        const totalCount = this.state.todos.length;
-        const doneCount = this.state.todos.filter((el) => el.done).length;
+        let todos = this.state.todos;
+
+        const totalCount = todos.length;
+        const doneCount = todos.filter((el) => el.done).length;
+        const filteredTodos = todos.filter((el) => el.label.toLowerCase().includes(this.state.searchString.toLowerCase()))
+
         return (<div className="todo-app">
             <AppHeader toDo={totalCount - doneCount} done={doneCount}/>
             <div className="add-todo-item-form d-flex">
-                <SearchPanel/>
+                <SearchPanel onChange={this.onChangeSearchPanel}/>
                 <ItemStatusFilter/>
             </div>
-            <TodoList todos={this.state.todos} onImportant={this.onImportant} onDelete={this.onDelete} onDone={this.onDone}/>
+            <TodoList todos={filteredTodos}
+                      onImportant={this.onImportant} onDelete={this.onDelete} onDone={this.onDone}/>
             <AddTodoItem onAddItem={this.onAddItem}/>
         </div>);
     }
