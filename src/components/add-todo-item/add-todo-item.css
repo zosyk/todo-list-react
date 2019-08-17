@@ -1,3 +1,8 @@
-.top-panel {
+.add-todo-item-form {
     margin: 1rem 0;
+}
+
+.button {
+    margin-left: 3px;
+    white-space: nowrap
 }
