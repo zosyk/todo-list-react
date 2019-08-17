@@ -4,27 +4,43 @@ import AppHeader from "../app-header/app-header";
 import SearchPanel from "../search-panel/search-panel";
 import ItemStatusFilter from "../item-status-filter/item-status-filter";
 import TodoList from "../todo-list/todo-list";
+import AddTodoItem from "../add-todo-item";
 import "./todo-app.css";
 
 export default class App extends Component {
 
+    maxId = 100;
 
     state ={todos : [
-        {
-            value: "Drink Coffee",
-            important: false,
-            key: 1,
-            done: false
-        }, {
-            value: "Build Awesome App",
-            important: true,
-            key: 2,
-            done: false
-        }]};
+        this.createTodoItem("Hello there"),
+        this.createTodoItem("Drink Coffee"),
+        this.createTodoItem("Build Awesome App", true),
+       ]};
+
+    createTodoItem(label, important = false) {
+        return {
+            label,
+            important: important,
+            done: false,
+            id: this.maxId++
+        }
+    }
+
+    onAddItem = (label) => {
+      const  newItem = this.createTodoItem(label);
+
+      this.setState(({todos}) => {
+        const newTodos = [...todos, newItem];
+
+        return {
+            todos: newTodos
+        }
+      });
+    };
 
     onImportant = (id) => {
         this.setState(({todos}) => {
-            const idx = todos.findIndex((el) => el.key === id);
+            const idx = todos.findIndex((el) => el.id === id);
             const item = {...todos[idx], important: !todos[idx].important};
 
             const before = todos.slice(0, idx);
@@ -39,7 +55,7 @@ export default class App extends Component {
 
     onDelete = (id) => {
         this.setState(({todos}) => {
-            const idx = todos.findIndex((el) => el.key === id);
+            const idx = todos.findIndex((el) => el.id === id);
 
             const before = todos.slice(0, idx);
             const after = todos.slice(idx+1);
@@ -53,7 +69,7 @@ export default class App extends Component {
 
     onDone = (id) => {
         this.setState(({todos}) => {
-            const idx = todos.findIndex((el) => el.key === id);
+            const idx = todos.findIndex((el) => el.id === id);
             const item = {...todos[idx], done: !todos[idx].done};
 
             const before = todos.slice(0, idx);
@@ -78,6 +94,7 @@ export default class App extends Component {
                 <ItemStatusFilter/>
             </div>
             <TodoList todos={this.state.todos} onImportant={this.onImportant} onDelete={this.onDelete} onDone={this.onDone}/>
+            <AddTodoItem onAddItem={this.onAddItem}/>
         </div>);
     }
 };

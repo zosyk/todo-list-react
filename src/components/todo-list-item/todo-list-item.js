@@ -2,7 +2,7 @@ import React from 'react';
 import './todo-list-item.css';
 
 const TodoListItem = ({item, onImportant, onDelete, onDone}) => {
-        const {value, important = false, done = false} = item;
+        const {label, important = false, done = false} = item;
         const style = {
             color: important ? 'steelblue' : 'black',
             fontWeight: important ? 'bold' : 'normal'
@@ -17,7 +17,7 @@ const TodoListItem = ({item, onImportant, onDelete, onDone}) => {
             <span className={classes}>
             <span className="todo-list-item-label" onClick={onDone}
                   style={style}>
-                {value}
+                {label}
             </span>
 
             <button type="button" className="btn btn-outline-success btn-sm float-right" onClick={onImportant}>
