@@ -12,6 +12,7 @@ export default class App extends Component {
     maxId = 100;
 
     state = {
+        activeStatus: 'All',
         searchString: '',
         todos: [
             this.createTodoItem("Hello there"),
@@ -85,18 +86,41 @@ export default class App extends Component {
         return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)];
     }
 
+    onItemStatusFilterClicked = (label) => {
+        this.setState({
+            activeStatus: label
+        });
+    };
+
+    getFilteredTodos() {
+        const {todos, searchString, activeStatus} = this.state;
+
+        let filtered = todos.filter((el) => el.label.toLowerCase().includes(searchString.toLowerCase()));
+
+        switch (activeStatus) {
+            case "Active":
+                filtered = filtered.filter((el) => !el.done);
+                break;
+            case "Done":
+                filtered = filtered.filter((el) => el.done);
+                break;
+        }
+
+        return filtered;
+    }
+
     render() {
-        let todos = this.state.todos;
+        const {todos, activeStatus}= this.state;
 
         const totalCount = todos.length;
         const doneCount = todos.filter((el) => el.done).length;
-        const filteredTodos = todos.filter((el) => el.label.toLowerCase().includes(this.state.searchString.toLowerCase()))
+        const filteredTodos = this.getFilteredTodos(todos);
 
         return (<div className="todo-app">
             <AppHeader toDo={totalCount - doneCount} done={doneCount}/>
             <div className="add-todo-item-form d-flex">
                 <SearchPanel onChange={this.onChangeSearchPanel}/>
-                <ItemStatusFilter/>
+                <ItemStatusFilter onItemStatusFilterClicked={this.onItemStatusFilterClicked} activeStatus={activeStatus}/>
             </div>
             <TodoList todos={filteredTodos}
                       onImportant={this.onImportant} onDelete={this.onDelete} onDone={this.onDone}/>
